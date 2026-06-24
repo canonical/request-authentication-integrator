@@ -4,6 +4,7 @@
 # The integration tests use the Jubilant library. See https://documentation.ubuntu.com/jubilant/
 # To learn more about testing, see https://documentation.ubuntu.com/ops/latest/explanation/testing/
 
+import contextlib
 import logging
 import os
 import pathlib
@@ -16,10 +17,28 @@ import pytest
 logger = logging.getLogger(__name__)
 
 
+def pytest_addoption(parser):
+    parser.addoption(
+        "--keep-models",
+        action="store_true",
+        default=False,
+        help="keep temporarily-created models",
+    )
+    parser.addoption("--model", default=None, help="Juju model to use for tests")
+
+
 @pytest.fixture(scope="module")
 def juju(request: pytest.FixtureRequest):
-    """Create a temporary Juju model for running tests."""
-    with jubilant.temp_model() as juju:
+    """Create a temporary or use an existing Juju model for running tests."""
+    keep_models = bool(request.config.getoption("--keep-models"))
+    juju_model = request.config.getoption("--model")
+
+    if juju_model:
+        model_context = contextlib.nullcontext(jubilant.Juju(model=juju_model))
+    else:
+        model_context = jubilant.temp_model(keep=keep_models)
+
+    with model_context as juju:
         yield juju
 
         if request.session.testsfailed:

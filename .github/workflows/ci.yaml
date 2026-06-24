@@ -157,7 +157,7 @@ jobs:
           # FIXME: Right now the complete path is half hardcoded to <charm name>_ubuntu@24.04-amd64.charm
           # We need to find a better way to dynamically get this value
           export CHARM_PATH=${{ github.workspace }}/request-authentication-configurator_ubuntu@24.04-amd64.charm
-          tox -vve integration
+          tox -e integration -- --model testing
 
       - name: Get juju status
         run: juju status --integrations
