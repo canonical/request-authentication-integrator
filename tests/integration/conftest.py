@@ -15,6 +15,7 @@ import jubilant
 import pytest
 
 logger = logging.getLogger(__name__)
+logging.getLogger("jubilant.wait").setLevel(logging.WARNING)
 
 
 def pytest_addoption(parser):
