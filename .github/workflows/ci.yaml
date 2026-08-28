@@ -89,7 +89,7 @@ jobs:
     name: Build charm
     needs:
       - get-charm-paths-track
-    uses: canonical/data-platform-workflows/.github/workflows/build_charm.yaml@v49.0.1
+    uses: canonical/data-platform-workflows/.github/workflows/build_charm.yaml@v51.0.0
     permissions:
       actions: read
       contents: read
@@ -103,7 +103,7 @@ jobs:
     needs:
       - get-charm-paths-track
       - build
-    uses: canonical/data-platform-workflows/.github/workflows/release_charm_pr.yaml@v49.0.1
+    uses: canonical/data-platform-workflows/.github/workflows/release_charm_pr.yaml@v51.0.0
     permissions:
       actions: read
       contents: read
@@ -112,7 +112,7 @@ jobs:
       artifact-prefix: ${{ needs.build.outputs.artifact-prefix }}
       path-to-charm-directory: ${{ fromJSON(needs.get-charm-paths-track.outputs.charm-paths)[0] }}
     secrets:
-      charmhub-token: ${{ secrets.CHARMCRAFT_CREDENTIALS }}
+      charmhub-token: ${{ secrets.CHARMHUB_TOKEN_EDGE_PR }}
 
   integration:
     name: Integration tests
